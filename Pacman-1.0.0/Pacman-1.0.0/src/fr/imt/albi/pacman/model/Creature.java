@@ -122,6 +122,15 @@ abstract class Creature {
 		// direction choisie :)
 		if (direction.equals(PacManLauncher.UP) || direction.equals(PacManLauncher.DOWN)
 				|| direction.equals(PacManLauncher.LEFT) || direction.equals(PacManLauncher.RIGHT)) {
+			if (xPosition > widthMap) {
+				this.setLocation(0, yPosition);
+			} else if (xPosition < 0) {
+				this.setLocation(widthMap, yPosition);
+			} else if (yPosition > heightMap) {
+				this.setLocation(xPosition, 0);
+			} else if (yPosition < 0) {
+				this.setLocation(xPosition, heightMap);
+			}
 			if (direction.equals(PacManLauncher.UP)) {
 				yMove = - width; 
 			}

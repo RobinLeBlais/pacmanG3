@@ -156,7 +156,7 @@ public class Canvas extends java.awt.Canvas {
 		this.printString("Vie : " + life, 10, 40);
 		this.printString("Meilleur score : " + meilleurScore, 240, 20);
 		this.canvas.repaint();
-		this.wait(125);
+		this.wait(50);
 	}
 
 	private void erase() {

@@ -11,7 +11,7 @@ public class Ghost extends Creature {
 
     public static final int SPEED_GHOST = 10;
     public static final int GHOST_SCORE = 100;
-    private final GhostSkin ghostSkin;
+    private final GhostSkin ghostSkin;	
     private final String ghostColor;
     private String previousMove;
     private int counterUTurn;
