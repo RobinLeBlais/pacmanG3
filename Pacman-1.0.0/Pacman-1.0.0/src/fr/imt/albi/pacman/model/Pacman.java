@@ -44,7 +44,9 @@ public class Pacman extends Creature {
 
 	public void removeLife() {
 		// TODO Méthode qui gère le retrait d'une vie à Pacman
-		this.currentLife ++;
+		this.currentLife --;
+		if (this.currentLife <= 0) {			
+		}
 	}
 
 	public int getCurrentLife() {
@@ -54,16 +56,24 @@ public class Pacman extends Creature {
 	public void updateScoreFood() {
 		// TODO Là, si Pacman a reçu un power-up, faut incrémenter le score comme il se
 		// doit.
+		this.currentScore = this.currentScore + Food.POWER_UP_SCORE;
+		this.checkIfNewLife();
+		
 	}
 
 	private void checkIfNewLife() {
 		// TODO Là, faut vérifier si le Pacman a atteint la limite pour avoir une vie
 		// supplémentaire :)
+		if (this.currentScore > this.nextLifeThreshold) {
+			this.currentLife ++;
+			this.nextLifeThreshold = this.nextLifeThreshold + this.LIFE_POINT_THRESHOLD;
+		}
 	}
 
 	public void updateScoreGhost() {
 		// TODO Là, si Pacman bouffe un fantome, faut incrémenter le score comme il faut
 		// aussi.
+		this.currentScore = this.currentScore + Ghost.GHOST_SCORE;
 	}
 
 	public int getCurrentScore() {
@@ -108,6 +118,30 @@ public class Pacman extends Creature {
 			 * déplacer - garder une trace du dernier déplacement effectué (y a un attribut
 			 * de classe pour ça) - Animer sa bouche ;)
 			 */
+			int[] coords = new int[2];
+			coords = this.getColumnAndRow();
+			int xPosition = coords[0];
+			int yPosition = coords[1];
+			
+			int[] newCoords = new int[2];
+			newCoords = this.navigateInMap(direction);
+			int nX = newCoords[0];
+			int nY = newCoords[1];
+			
+			int[] incrementsRetenus = new int[2];
+			incrementsRetenus = this.checkCollision(direction, nX, nY);
+			int dx = incrementsRetenus[0];
+			int dy = incrementsRetenus[1];
+			
+			
+			Figure[][] map = this.gameMap.getMap();
+			Figure f = map[xPosition+dx][yPosition+dy];
+			
+			if (this.checkCaseType(f)) {
+				this.interactWithFood(map, xPosition+dx, yPosition+dy);
+			} else if (this.isPacmanCollidingWithGhost(f)){
+				
+			}
 		} else {
 			/*
 			 * TODO Si le déplacement n'est possible, il faut pouvoir récupérer les
@@ -212,6 +246,11 @@ public class Pacman extends Creature {
 				 * qu'il y avait dedans - Mettre à jour le score - Sachant qu'un food peut être
 				 * un powerup, y a un truc à gérer :)
 				 */
+				food.setFood(null);
+				food.draw();
+				this.gameMap.pickFood();
+				this.gameMap.draw();
+				this.updateScoreFood();
 			}
 		}
 	}
