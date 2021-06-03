@@ -121,18 +121,11 @@ public class Pacman extends Creature {
 					
 			int[] newCoords = new int[2];
 			newCoords = this.navigateInMap(direction);
-			int nx = newCoords[0];
-			int ny = newCoords[1];
+			xMove = newCoords[0];
+			yMove = newCoords[1];
 			
-			int[] incrementsRetenus = new int[2];
-			incrementsRetenus = this.checkCollision(direction, nx, ny);
-			int dx = incrementsRetenus[0];
-			int dy = incrementsRetenus[1];
-			
-			this.move(dx,dy);
 			this.lastPosition = direction;
 			this.lastMovement = direction;
-			this.animateMouth();
 		} else {
 			/*
 			 * TODO Si le déplacement n'est possible, il faut pouvoir récupérer les
@@ -144,17 +137,11 @@ public class Pacman extends Creature {
 			
 			int[] newCoords = new int[2];
 			newCoords = this.navigateInMap(this.lastPosition);
-			int nx = newCoords[0];
-			int ny = newCoords[1];
-			
-			int[] incrementsRetenus = new int[2];
-			incrementsRetenus = this.checkCollision(this.lastPosition, nx, ny);
-			int dx = incrementsRetenus[0];
-			int dy = incrementsRetenus[1];
-			
-			this.move(dx,dy);
-			this.animateMouth();
+			xMove = newCoords[0];
+			yMove = newCoords[1];			
 		}
+		this.move(xMove,yMove);
+		this.animateMouth();
 	}
 
 	/**

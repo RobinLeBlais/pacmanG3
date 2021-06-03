@@ -131,22 +131,23 @@ abstract class Creature {
 			} else if (yPosition < 0) {
 				this.setLocation(xPosition, heightMap);
 			}
-			if (direction.equals(PacManLauncher.UP)) {
-				yMove = - width; 
-			}
-			if (direction.equals(PacManLauncher.DOWN)) {
+			switch (direction) {
+			case PacManLauncher.UP:
+				yMove = - width;
+				break;
+			case PacManLauncher.DOWN:
 				yMove = + width;
-			}
-			if (direction.equals(PacManLauncher.LEFT)) {
-				xMove = - width; 
-			}
-			if (direction.equals(PacManLauncher.RIGHT)) {
-				xMove = + width;
+				break;
+			case PacManLauncher.LEFT:
+				xMove = - width;
+				break;
+			case PacManLauncher.RIGHT:
+				xMove = + width;				
+				break;
 			}
 		}
-
-		ret[0] = xMove;
-		ret[1] = yMove;
+		
+		ret = this.checkCollision(direction, xMove, yMove);
 		return ret;
 	}
 

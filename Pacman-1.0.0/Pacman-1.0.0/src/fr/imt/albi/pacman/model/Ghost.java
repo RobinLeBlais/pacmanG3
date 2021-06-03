@@ -27,6 +27,7 @@ public class Ghost extends Creature {
         this.ghostSkin = new GhostSkin(size, x, y, color);
     }
 
+    
     public void move() {
         if (this.counterFear == 0) {
             this.setNormalState();
@@ -59,7 +60,96 @@ public class Ghost extends Creature {
             this.counterFear--;
         }
     }
-
+    
+    
+    public void move2(int xPacman, int yPacman) {
+        if (this.counterFear == 0) {
+            this.setNormalState();
+        }
+        if (this.counterFear % 2 == 1 || this.counterFear == 0) {
+            if (this.counterFear > 0) {
+                this.counterFear--;
+            }
+            this.counterUTurn--;
+            if (this.counterUTurn == 0) {
+            	if (checkWhereIsPacman(xPacman, yPacman)) {
+            		int i = (int) (2*Math.random());
+            		this.move(this.findDirection(this.getX(), this.getY(), xPacman, yPacman)[i]);
+            	} else {
+            		switch (this.previousMove) {
+                    case PacManLauncher.UP:
+                        this.move(PacManLauncher.DOWN);
+                        break;
+                    case PacManLauncher.DOWN:
+                        this.move(PacManLauncher.UP);
+                        break;
+                    case PacManLauncher.LEFT:
+                        this.move(PacManLauncher.RIGHT);
+                        break;
+                    case PacManLauncher.RIGHT:
+                        this.move(PacManLauncher.LEFT);
+                        break;
+            		}
+                }
+                this.initUTurnCounter();
+            } else {
+                checkCrossing(this.previousMove);
+            }
+        } else {
+            this.counterFear--;
+        }
+    }
+    
+    public void move3(int xPacman, int yPacman) {
+        if (this.counterFear == 0) {
+            this.setNormalState();
+        }
+        if (this.counterFear % 2 == 1 || this.counterFear == 0) {
+            if (this.counterFear > 0) {
+                this.counterFear--;
+            }           
+            int i = (int) (2*Math.random());
+            String direction = (this.findDirection(this.getX(), this.getY(), xPacman, yPacman)[i]);
+            checkCrossing(direction);
+            this.move(direction);
+            	
+        } else {
+            this.counterFear--;
+        }
+    }
+    
+    public boolean checkWhereIsPacman(int xPacman, int yPacman) {
+    	boolean isPacmanClose = false;
+    	double distance = Math.sqrt((this.getX() - xPacman)^2 + (this.getY() - yPacman)^2);
+    	double limite = 300;
+    	if (distance<limite) {
+    		isPacmanClose = true;
+    	}
+    	return isPacmanClose;
+    }
+    
+    public String[] findDirection(int xG, int yG, int xP, int yP) {
+    	String directionRightLeft = new String();
+    	String directionUpDown = new String();
+    	
+    	if (xG > xP){
+    		directionRightLeft = PacManLauncher.LEFT;
+    	} else {
+    		directionRightLeft = PacManLauncher.RIGHT;
+    	}
+    	if (yG > yP) {
+    		directionUpDown = PacManLauncher.UP;
+    	} else {
+    		directionUpDown = PacManLauncher.DOWN;
+    	}
+    	String[] versPacman = new String[2];
+    	versPacman[0] = directionUpDown;
+    	versPacman[1] = directionRightLeft;
+    	
+    	return versPacman;
+    }
+    
+    
     public void initUTurnCounter() {
         this.counterUTurn = (int) (Math.random() * 30) + 20;
     }

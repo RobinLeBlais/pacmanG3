@@ -114,6 +114,7 @@ public class PacManLauncher {
 
 			for (Ghost g : this.ghost) {
 				g.move();
+				//g.move3(this.pacman.getX(), this.pacman.getY());
 			}
 			this.collisionGhost();
 			Canvas.getCanvas().redraw(this.pacman.getCurrentScore(), this.pacman.getCurrentLife(), Score.getScore());
