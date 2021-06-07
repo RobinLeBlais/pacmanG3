@@ -74,6 +74,7 @@ public class Pacman extends Creature {
 		// TODO Là, si Pacman bouffe un fantome, faut incrémenter le score comme il faut
 		// aussi.
 		this.currentScore = this.currentScore + Ghost.GHOST_SCORE;
+		this.checkIfNewLife();
 	}
 
 	public int getCurrentScore() {
@@ -106,7 +107,7 @@ public class Pacman extends Creature {
 	}
 
 	@Override
-	public void move(String direction) {
+	public void move(String direction) {		
 		int xMove = 0;
 		int yMove = 0;
 
@@ -151,6 +152,7 @@ public class Pacman extends Creature {
 	 * @param direction La direction choisie
 	 * @return true si possible, false sinon
 	 */
+	 
 	private boolean isMovePossible(String direction) {
         boolean canMove = false;
         Figure[][] map = this.gameMap.getMap();

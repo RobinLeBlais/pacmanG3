@@ -61,8 +61,8 @@ public class Ghost extends Creature {
         }
     }
     
-    
     public void move2(int xPacman, int yPacman) {
+    	
         if (this.counterFear == 0) {
             this.setNormalState();
         }
@@ -70,83 +70,57 @@ public class Ghost extends Creature {
             if (this.counterFear > 0) {
                 this.counterFear--;
             }
-            this.counterUTurn--;
-            if (this.counterUTurn == 0) {
-            	if (checkWhereIsPacman(xPacman, yPacman)) {
-            		int i = (int) (2*Math.random());
-            		this.move(this.findDirection(this.getX(), this.getY(), xPacman, yPacman)[i]);
-            	} else {
-            		switch (this.previousMove) {
-                    case PacManLauncher.UP:
-                        this.move(PacManLauncher.DOWN);
-                        break;
-                    case PacManLauncher.DOWN:
-                        this.move(PacManLauncher.UP);
-                        break;
-                    case PacManLauncher.LEFT:
-                        this.move(PacManLauncher.RIGHT);
-                        break;
-                    case PacManLauncher.RIGHT:
-                        this.move(PacManLauncher.LEFT);
-                        break;
-            		}
-                }
-                this.initUTurnCounter();
-            } else {
-                checkCrossing(this.previousMove);
-            }
-        } else {
-            this.counterFear--;
-        }
-    }
-    
-    public void move3(int xPacman, int yPacman) {
-        if (this.counterFear == 0) {
-            this.setNormalState();
-        }
-        if (this.counterFear % 2 == 1 || this.counterFear == 0) {
-            if (this.counterFear > 0) {
-                this.counterFear--;
-            }           
             int i = (int) (2*Math.random());
-            String direction = (this.findDirection(this.getX(), this.getY(), xPacman, yPacman)[i]);
+            String direction = (this.findDirection(xPacman, yPacman)[i]);
             checkCrossing(direction);
-            this.move(direction);
-            	
         } else {
             this.counterFear--;
         }
     }
     
-    public boolean checkWhereIsPacman(int xPacman, int yPacman) {
-    	boolean isPacmanClose = false;
-    	double distance = Math.sqrt((this.getX() - xPacman)^2 + (this.getY() - yPacman)^2);
-    	double limite = 300;
-    	if (distance<limite) {
-    		isPacmanClose = true;
-    	}
-    	return isPacmanClose;
-    }
+
     
-    public String[] findDirection(int xG, int yG, int xP, int yP) {
+	/**
+	 * Cette mÃ©thode permet d'obtenir les directions qui mènent à Pacman ou celles qui permettent de le fuire.
+	 *
+	 * @param xP, yP les coordonnées de Pacman.
+	 * @return un tableau contenant une direction verticale et une direction horizontale qui mènent à Pacman (ou qui le fuit si le fantôme a peur)
+	 */
+    public String[] findDirection(int xP, int yP) {
     	String directionRightLeft = new String();
     	String directionUpDown = new String();
     	
-    	if (xG > xP){
-    		directionRightLeft = PacManLauncher.LEFT;
+    	if (this.getFearCounter()>0) {
+    		
+    		if (this.getX() < xP){
+        		directionRightLeft = PacManLauncher.LEFT;
+        	} else {
+        		directionRightLeft = PacManLauncher.RIGHT;
+        	}
+        	if (this.getY() < yP) {
+        		directionUpDown = PacManLauncher.UP;
+        	} else {
+        		directionUpDown = PacManLauncher.DOWN;
+        	}
+    		
     	} else {
-    		directionRightLeft = PacManLauncher.RIGHT;
+    		
+    		if (this.getX() > xP){
+        		directionRightLeft = PacManLauncher.LEFT;
+        	} else {
+        		directionRightLeft = PacManLauncher.RIGHT;
+        	}
+        	if (this.getY() > yP) {
+        		directionUpDown = PacManLauncher.UP;
+        	} else {
+        		directionUpDown = PacManLauncher.DOWN;
+        	}
+        	
     	}
-    	if (yG > yP) {
-    		directionUpDown = PacManLauncher.UP;
-    	} else {
-    		directionUpDown = PacManLauncher.DOWN;
-    	}
-    	String[] versPacman = new String[2];
-    	versPacman[0] = directionUpDown;
-    	versPacman[1] = directionRightLeft;
-    	
-    	return versPacman;
+    	String[] towardPacman = new String[2];
+    	towardPacman[0] = directionUpDown;
+    	towardPacman[1] = directionRightLeft;
+    	return towardPacman;
     }
     
     
@@ -286,11 +260,11 @@ public class Ghost extends Creature {
     }
 
     public void chooseMove(String toward, ArrayList<Figure> listF, Figure fUp, Figure fDown, Figure fLeft, Figure fRight) {
-        boolean result = false;
+        
         ArrayList<Figure> toGo = new ArrayList<Figure>();
 
         for (Figure f : listF) {
-            if (f.getClass().getName().compareTo("view.Wall") != 0) {
+            if (!(f instanceof Wall)) {
                 toGo.add(f);
             }
         }
@@ -326,4 +300,5 @@ public class Ghost extends Creature {
     public void draw() {
         this.ghostSkin.draw();
     }
+    
 }

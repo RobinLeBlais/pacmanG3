@@ -176,4 +176,6 @@ abstract class Creature {
 
 		return result;
 	}
+	
+
 }
